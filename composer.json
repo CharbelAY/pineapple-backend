@@ -1,0 +1,9 @@
+{
+    "name": "macuser/magebit_backend_test",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "require": {}
+}
