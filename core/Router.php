@@ -49,14 +49,14 @@ class Router
     {
         $layout = $this->get_layout();
         $view = $this->get_view($view, $params);
-        return str_replace("{{content}}", $view, $layout);
+        echo str_replace("{{content}}", $view, $layout);
     }
 
     protected function get_layout()
     {
         $layout = Application::$app->getController()->layout;
         ob_start();
-        include_once Application::$ROOT_DIR . "/../views/layouts/$layout.php";
+        include_once Application::$ROOT_DIR . "/views/layouts/$layout.php";
         return ob_get_clean();
     }
 
@@ -67,7 +67,7 @@ class Router
             $$key = $value;
         }
         ob_start();
-        include_once Application::$ROOT_DIR . "/../views/$view.php";
+        include_once Application::$ROOT_DIR . "/views/$view.php";
         return ob_get_clean();
     }
 

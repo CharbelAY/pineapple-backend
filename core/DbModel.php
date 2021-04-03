@@ -4,6 +4,8 @@
 namespace app\core;
 
 
+use PDO;
+
 abstract class DbModel extends Model
 {
 
@@ -19,6 +21,24 @@ abstract class DbModel extends Model
         }
         $statement->execute();
         return true;
+    }
+
+    public function exists(){
+        $tableName = $this->tableName();
+        $attributes = $this->attributes();
+        $dontSave = $this->dontSave();
+        $attributes = array_diff($attributes, $dontSave);
+        $statement = "SELECT 1 FROM $tableName WHERE (";
+        foreach ($attributes as $attribute){
+            $statement .= "$attribute = :$attribute";
+        }
+        $statement.=")";
+        $statement = self::prepare($statement);
+        foreach ($attributes as $attribute){
+            $statement->bindValue(":$attribute",$this->{$attribute});
+        }
+        $statement->execute();
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
     public static function prepare($sql)
