@@ -9,11 +9,23 @@ class m0001_initial{
         CREATE TABLE users(
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) NOT NULL,
+        providerId INT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
         )ENGINE=INNODB
         ";
 
         $db->pdo->exec($SQLUsers);
+
+        $SQLProvider="
+        CREATE TABLE provider(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        providerName VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
+        )ENGINE=INNODB
+        ";
+
+        $db->pdo->exec($SQLProvider);
+
 
     }
 
@@ -21,6 +33,9 @@ class m0001_initial{
         $db = \app\core\Application::$app->db;
         $SQLUsers = "DROP TABLE users ;";
         $db->pdo->exec($SQLUsers);
+
+        $SQLProvider = "DROP TABLE provider ;";
+        $db->pdo->exec($SQLProvider);
     }
 
 }

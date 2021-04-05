@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\core\Application;
 use app\core\BaseController;
 use app\core\Request;
+use app\models\Provider;
 use app\models\User;
 
 class EmailsController extends BaseController
@@ -21,6 +22,15 @@ class EmailsController extends BaseController
             $body=$request->getBody();
             $user->loadModel($body);
             if($user->isValidEmail()){
+                $provider = new Provider();
+                $provider->setProviderName($user->email);
+                $providerInsertedId=0;
+                if(!$provider->exists()){
+                    $providerInsertedId = $provider->save();
+                }else{
+                    $providerInsertedId = (int) $provider->getId();
+                }
+                $user->providerId=$providerInsertedId;
                 if($user->exists()){
                     return json_encode(["value"=>"this email already exists"]);
                 }else{
@@ -31,7 +41,7 @@ class EmailsController extends BaseController
                 return json_encode(["value"=>"email is invalid"]);
             }
         }catch (\Exception $e){
-            return json_encode(["value"=>$e]);
+            return json_encode(["value"=>$e->getMessage()]);
         }
     }
 

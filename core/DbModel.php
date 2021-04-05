@@ -20,7 +20,25 @@ abstract class DbModel extends Model
             $statement->bindValue(":$attribute", $this->{$attribute});
         }
         $statement->execute();
-        return true;
+        return $this->lastInsertedId();
+    }
+
+    public function getId(){
+        $tableName = $this->tableName();
+        $attributes = $this->attributes();
+        $dontSave = $this->dontSave();
+        $attributes = array_diff($attributes, $dontSave);
+        $statement = "SELECT id FROM $tableName WHERE (";
+        foreach ($attributes as $attribute){
+            $statement .= "$attribute = :$attribute";
+        }
+        $statement.=")";
+        $statement = self::prepare($statement);
+        foreach ($attributes as $attribute){
+            $statement->bindValue(":$attribute",$this->{$attribute});
+        }
+        $statement->execute();
+        return $statement->fetch(PDO::FETCH_ASSOC)["id"];
     }
 
     public function exists(){
@@ -30,8 +48,9 @@ abstract class DbModel extends Model
         $attributes = array_diff($attributes, $dontSave);
         $statement = "SELECT 1 FROM $tableName WHERE (";
         foreach ($attributes as $attribute){
-            $statement .= "$attribute = :$attribute";
+            $statement .= "$attribute = :$attribute and ";
         }
+        $statement= substr($statement,0,-4);
         $statement.=")";
         $statement = self::prepare($statement);
         foreach ($attributes as $attribute){
@@ -56,8 +75,13 @@ abstract class DbModel extends Model
         $statement = self::prepare("DELETE FROM $tableName WHERE id IN ($params)");
         $statement->execute($ids);
     }
+
     public static function prepare($sql)
     {
         return Application::$app->db->pdo->prepare($sql);
+    }
+
+    private function lastInsertedId(){
+        return Application::$app->db->pdo->lastInsertId();
     }
 }

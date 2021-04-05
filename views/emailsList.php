@@ -2,31 +2,28 @@
     <div class="col-lg-3" align="center">
         <h1>Filtering</h1>
         <hr class="mb-5">
-        <form action="">
+        <form action="" id="filteringForm">
             <div class="input-group mb-3">
-                <span class="input-group-text" id="basic-addon1">@</span>
-                <input type="email" class="form-control" placeholder="Enter searched email here..." aria-label="email"
-                       aria-describedby="basic-addon1">
+                <span class="input-group-text" id="email-label">email</span>
+                <input type="email" class="form-control" placeholder="Enter searched email here..." name="email" >
             </div>
-            <div class="input-group mb-3">
-                <select class="form-select" aria-label="Default select">
-                    <option selected>Filter by date</option>
-                    <option value="1">Ascending</option>
-                    <option value="2">Descending</option>
+                <select class="form-select mb-3" name="date-sorting">
+                    <option value="" disabeled selected>Sort by date</option>
+                    <option value="Ascending">Ascending</option>
+                    <option value="Descending">Descending</option>
                 </select>
-            </div>
-            <select class="form-select" aria-label="Default select">
-                <option selected>Filter by provider</option>
-                <option value="1">.com</option>
-                <option value="2">.fr</option>
-                <option value="3">.us</option>
+            <select class="form-select mb-3" name="provider-sorting">
+                <option disabeled selected>Sort by provider</option>
+                <option value="gmail">gmail</option>
+                <option value="yahoo">yahoo</option>
+                <option value="outlook">outlook</option>
             </select>
-            <button class="btn btn-primary mt-2" type="submit" form="">Filter</button>
+            <button class="btn btn-primary mt-2 w-100" type="submit" form="filteringForm">Filter</button>
         </form>
 
         <h1 class="mt-5">Actions</h1>
         <hr class="mb-5">
-        <button class="btn btn-danger" type="submit" form="tableForm">Delete Selected Items</button>
+        <button class="btn btn-danger w-100" type="submit" form="tableForm">Delete Selected Items</button>
 
     </div>
     <div class="col-lg-9 gx-5">

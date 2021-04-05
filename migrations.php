@@ -15,5 +15,5 @@ $config=[
 
 $app = new Application(dirname(__DIR__),$config);
 
-echo("Applying migration");
+echo(".................................Applying migration.......................");
 $app->db->applyMigration();
