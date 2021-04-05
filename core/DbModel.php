@@ -41,6 +41,21 @@ abstract class DbModel extends Model
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getAll(){
+        $tableName = $this->tableName();
+        $statement = "SELECT * FROM $tableName";
+        $statement = self::prepare($statement);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
+    public function delete($ids){
+        $tableName = $this->tableName();
+        $params = str_repeat('?,', count($ids) - 1) . '?';
+        $statement = self::prepare("DELETE FROM $tableName WHERE id IN ($params)");
+        $statement->execute($ids);
+    }
     public static function prepare($sql)
     {
         return Application::$app->db->pdo->prepare($sql);

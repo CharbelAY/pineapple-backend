@@ -10,7 +10,8 @@ use app\models\User;
 class EmailsController extends BaseController
 {
     public function getEmails(){
-        $this->render("emailsList",[]);
+        $users = new User();
+        $this->render("emailsList",["users"=>$users->getAll()]);
     }
 
     public function addEmails(Request $request){
@@ -32,5 +33,15 @@ class EmailsController extends BaseController
         }catch (\Exception $e){
             return json_encode(["value"=>$e]);
         }
+    }
+
+    public function deleteEmails(Request $request){
+        $ids = array_keys($request->getBody());
+        if($ids){
+            $user = new User();
+            $user->delete($ids);
+        }
+        header('Location: ' . "/get-emails");
+        exit();
     }
 }
