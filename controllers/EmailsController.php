@@ -11,8 +11,17 @@ use app\models\User;
 class EmailsController extends BaseController
 {
     public function getEmails(){
+        $filteringOptions=["Ascending","Descending"];
+        $filteringColumns=["email","created_at"];
+        $filteringOrder=["ASC","DESC"];
         $users = new User();
-        $this->render("emailsList",["users"=>$users->getAll()]);
+        $provider = new Provider();
+        $providerName = $provider->getFirst($_GET["provider-filtering"])["providerName"];
+        $searchedUsers = $users->searchForEmails($_GET["email"],$providerName,$_GET["sorting-column"],$_GET["sorting-order"],"email");
+        foreach ($searchedUsers as$key=>$user){
+            $searchedUsers[$key]["providerName"]=$provider->getFirst($user["providerId"])["providerName"];
+        }
+        $this->render("emailsList",["users"=>$searchedUsers,"filteringColumns"=>$filteringColumns,"filteringOrder"=>$filteringOrder,"providers"=>$provider->getAll(),"history"=>$_GET,"filteringOptions"=>$filteringOptions]);
     }
 
     public function addEmails(Request $request){

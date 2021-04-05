@@ -23,6 +23,16 @@ abstract class DbModel extends Model
         return $this->lastInsertedId();
     }
 
+    public function searchForEmails($emailName,$provider,$sortingColumn,$sortingOrder,$column){
+        $tableName = $this->tableName();
+        $statement = "SELECT * FROM $tableName WHERE $column LIKE '%{$emailName}%' AND $column LIKE '%$provider%'";
+        if($sortingColumn){
+            $statement .= "ORDER BY $sortingColumn $sortingOrder";
+        }
+        $statement = self::prepare($statement);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function getId(){
         $tableName = $this->tableName();
         $attributes = $this->attributes();
@@ -67,6 +77,18 @@ abstract class DbModel extends Model
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    }
+
+    public function getFirst($id){
+        if($id){
+            $tableName = $this->tableName();
+            $statement = "SELECT * FROM $tableName WHERE id = $id";
+            $statement = self::prepare($statement);
+            $statement->execute();
+            return $statement->fetch(PDO::FETCH_ASSOC);
+        }else{
+            return null;
+        }
     }
 
     public function delete($ids){
