@@ -7,6 +7,7 @@ use app\core\BaseController;
 use app\core\Request;
 use app\models\Provider;
 use app\models\User;
+use app\services\CsvService;
 
 class EmailsController extends BaseController
 {
@@ -62,5 +63,35 @@ class EmailsController extends BaseController
         }
         header('Location: ' . "/get-emails");
         exit();
+    }
+
+    public function exportcsv(Request $request){
+        $body = $request->getBody();
+        $filename="exportedUsers.csv";
+        $service = new CsvService();
+        $user=new User();
+        $provider=new Provider();
+        $data=$user->getAllWithIds($body);
+        foreach ($data as$key=>$d){
+            $provName=$provider->getFirst($d["providerId"])["providerName"];
+            unset($d["id"]);
+            unset($d["providerId"]);
+            $data[$key]=$d;
+            $data[$key]["providerName"]=$provName;
+        }
+        $result = $service->generateCSV($filename,$data);
+        if($result){
+            header("Content-Description: File Transfer");
+            header("Content-Disposition: attachment; filename=".$filename);
+            header("Content-Type: application/csv; ");
+
+            readfile($filename);
+
+            unlink($filename);
+        }else{
+            header('Location: ' . "/get-emails");
+            exit();
+        }
+
     }
 }

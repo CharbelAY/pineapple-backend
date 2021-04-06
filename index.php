@@ -21,6 +21,9 @@ $app->router->get("/", function () {
 
 $app->router->get("/get-emails", [EmailsController::class, "getEmails"]);
 
+$app->router->get("/exportcsv", [EmailsController::class, "exportcsv"]);
+
+
 $app->router->post("/addemail",[EmailsController::class,"addEmails"]);
 
 $app->router->post("/deleteEmails",[EmailsController::class,"deleteEmails"]);

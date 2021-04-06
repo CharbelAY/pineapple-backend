@@ -79,6 +79,14 @@ abstract class DbModel extends Model
 
     }
 
+    public function getAllWithIds(array $ids){
+        $tableName = $this->tableName();
+        $ids = join("','",array_keys($ids));
+        $statement = "SELECT * FROM $tableName WHERE id IN ('$ids')";
+        $statement = self::prepare($statement);
+        $statement->execute();
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function getFirst($id){
         if($id){
             $tableName = $this->tableName();
