@@ -33,14 +33,13 @@
 
         <h1 class="mt-5">Actions</h1>
         <hr class="mb-5">
-        <button class="btn btn-danger w-100 mb-3" type="submit" form="tableForm">Delete selected items</button>
-            <button class="btn btn-success w-100" type="submit" form="csvForm">Export selected items as CSV</button>
+        <button class="btn btn-danger w-100 mb-3" type="submit" form="tableForm" name="delete" value="delete">Delete selected items</button>
+        <button class="btn btn-success w-100" type="submit" form="tableForm" name="export" value="export">Export selected items as CSV</button>
 
 
     </div>
     <div class="col-lg-9 gx-5">
-        <form action="/exportcsv" method="get" id="csvForm">
-        <form name="tableForm" action="/deleteEmails" method="post" id="tableForm">
+        <form name="tableForm" action="/actions-on-table" method="post" id="tableForm">
             <table class="table">
                 <thead>
                 <tr>
@@ -61,7 +60,6 @@
                 <?php endforeach; ?>
                 </tbody>
             </table>
-        </form>
         </form>
     </div>
 

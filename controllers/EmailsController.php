@@ -55,8 +55,19 @@ class EmailsController extends BaseController
         }
     }
 
-    public function deleteEmails(Request $request){
-        $ids = array_keys($request->getBody());
+    public function actionsOnTable(Request $request){
+        $body=$request->getBody();
+        if($body["delete"]){
+            unset($body["delete"]);
+            $this->deleteEmails($body);
+        }else if($body["export"]){
+            unset($body["export"]);
+            $this->exportcsv($body);
+        }
+    }
+
+    public function deleteEmails($body){
+        $ids = array_keys($body);
         if($ids){
             $user = new User();
             $user->delete($ids);
@@ -65,8 +76,7 @@ class EmailsController extends BaseController
         exit();
     }
 
-    public function exportcsv(Request $request){
-        $body = $request->getBody();
+    public function exportcsv($body){
         $filename="exportedUsers.csv";
         $service = new CsvService();
         $user=new User();
